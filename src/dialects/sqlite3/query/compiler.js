@@ -84,7 +84,7 @@ assign(QueryCompiler_SQLite3.prototype, {
         insertData.values[0],
         this.client.valueForUndefined
       );
-      sql + ` values (${parameters})`;
+      sql += ` values (${parameters})`;
 
       const { onConflict, ignore, merge } = this.single;
       if (onConflict && ignore) sql += this._ignore(onConflict);
@@ -114,7 +114,7 @@ assign(QueryCompiler_SQLite3.prototype, {
       }
       blocks[i] = block.join(", ");
     }
-    sql + " select " + blocks.join(" union all select ");
+    sql += " select " + blocks.join(" union all select ");
 
     const { onConflict, ignore, merge } = this.single;
     if (onConflict && ignore) sql += " where true" + this._ignore(onConflict);
