@@ -1,30 +1,32 @@
-
-import * as helpers from '../../helpers';
+import * as helpers from "../../helpers";
 
 function generateCombinedName(postfix, name, subNames) {
-  const crypto = require('crypto');
+  const crypto = require("crypto");
   const limit = 30;
   if (!Array.isArray(subNames)) subNames = subNames ? [subNames] : [];
-  const table = name.replace(/\.|-/g, '_');
-  const subNamesPart = subNames.join('_');
-  let result = `${table}_${subNamesPart.length ? subNamesPart + '_': ''}${postfix}`.toLowerCase();
+  const table = name?.replace(/\.|-/g, "_");
+  const subNamesPart = subNames.join("_");
+  let result = `${table}_${
+    subNamesPart.length ? subNamesPart + "_" : ""
+  }${postfix}`.toLowerCase();
   if (result.length > limit) {
     helpers.warn(
       `Automatically generated name "${result}" exceeds ${limit} character ` +
-      `limit for Oracle. Using base64 encoded sha1 of that name instead.`
+        `limit for Oracle. Using base64 encoded sha1 of that name instead.`
     );
     // generates the sha1 of the name and encode it with base64
-    result = crypto.createHash('sha1')
+    result = crypto
+      .createHash("sha1")
       .update(result)
-      .digest('base64')
-      .replace('=', '');
+      .digest("base64")
+      ?.replace("=", "");
   }
   return result;
 }
 
 function wrapSqlWithCatch(sql, errorNumberToCatch) {
   return (
-    `begin execute immediate '${sql.replace(/'/g, "''")}'; ` +
+    `begin execute immediate '${sql?.replace(/'/g, "''")}'; ` +
     `exception when others then if sqlcode != ${errorNumberToCatch} then raise; ` +
     `end if; ` +
     `end;`
@@ -37,6 +39,6 @@ function ReturningHelper(columnName) {
 
 ReturningHelper.prototype.toString = function () {
   return `[object ReturningHelper:${this.columnName}]`;
-}
+};
 
 export { generateCombinedName, wrapSqlWithCatch, ReturningHelper };
