@@ -401,7 +401,6 @@ export default class Migrator {
   _waterfallBatch(batchNo, migrations, direction, trx) {
     const trxOrKnex = trx || this.knex;
     const { tableName, disableTransactions, migrationModules } = this.config;
-    const directory = this._absoluteConfigDir();
     let current = Promise.bind({ failed: false, failedOn: 0 });
     const log = [];
     each(migrations, (migration) => {
@@ -418,12 +417,12 @@ export default class Migrator {
           return warnPromise(migration[direction](trxOrKnex, Promise), name);
         })
         .then(() => {
-          log.push(path.join(directory, name));
+          log.push(name);
           if (direction === "up") {
             return trxOrKnex.into(tableName).insert({
               name,
               batch: batchNo,
-              migration_time: new Date(),
+              migration_time: Date.now(),
             });
           }
           if (direction === "down") {
@@ -446,7 +445,7 @@ export default class Migrator {
   _absoluteConfigDir() {
     return process.cwd
       ? path.resolve(process.cwd(), this.config.directory)
-      : path.resolve("../../../../", this.config.directory);
+      : path.join("../../../../", this.config.directory);
   }
 
   setConfig(config) {
