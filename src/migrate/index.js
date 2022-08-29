@@ -444,7 +444,7 @@ export default class Migrator {
   }
 
   _absoluteConfigDir() {
-    return process?.cwd()
+    return process.cwd
       ? path.resolve(process.cwd(), this.config.directory)
       : path.resolve("../../../../", this.config.directory);
   }
