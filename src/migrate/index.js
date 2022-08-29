@@ -137,37 +137,37 @@ export default class Migrator {
 
     return this._ensureFolder(config)
       .then((val) => this._generateStubTemplate(val))
-      .then((val) => this._writeNewMigration(name, val))
-      .then((val) => this._updateMigrationModules(val));
+      .then((val) => this._writeNewMigration(name, val));
+    // .then((val) => this._updateMigrationModules(val));
   }
 
-  _updateMigrationModules(val) {
-    console.log("in updateMigrationModules", val);
-    const migs = Promise.promisify(fs.readdir, { context: fs })(
-      this._absoluteConfigDir()
-    ).then((migrations) => {
-      return filter(migrations, function (value) {
-        const extension = path.extname(value);
-        return includes(loadExtensions, extension);
-      }).sort();
-    });
-    const filename = "index.js";
-    return Promise.promisify(fs.writeFile, { context: fs })(
-      path.join(dir, filename),
-      `
-       ${migs
-         .map((name) => {
-           `import ${name.split("_")[1].split(".")[0]} from './${name}'`;
-         })
-         .join(";")}
-       export const migrationModules = {
-        ${migs
-          .map((name) => `${name}:${name.split("_")[1].split(".")[0]}`)
-          .join(",")}
-       }
-       `
-    ).return(path.join(dir, filename));
-  }
+  // _updateMigrationModules(val) {
+  //   console.log("in updateMigrationModules", val);
+  //   const migs = Promise.promisify(fs.readdir, { context: fs })(
+  //     this._absoluteConfigDir()
+  //   ).then((migrations) => {
+  //     return filter(migrations, function (value) {
+  //       const extension = path.extname(value);
+  //       return includes(loadExtensions, extension);
+  //     }).sort();
+  //   });
+  //   const filename = "index.js";
+  //   return Promise.promisify(fs.writeFile, { context: fs })(
+  //     path.join(dir, filename),
+  //     `
+  //      ${migs
+  //        .map((name) => {
+  //          `import ${name.split("_")[1].split(".")[0]} from './${name}'`;
+  //        })
+  //        .join(";")}
+  //      export const migrationModules = {
+  //       ${migs
+  //         .map((name) => `${name}:${name.split("_")[1].split(".")[0]}`)
+  //         .join(",")}
+  //      }
+  //      `
+  //   ).return(path.join(dir, filename));
+  // }
   // Lists all available migration versions, as a sorted array.
   _listAll(config) {
     this.config = this.setConfig(config);
