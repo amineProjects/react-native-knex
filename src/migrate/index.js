@@ -1,8 +1,8 @@
 // Migrator
 // -------
-import fs from "fs";
+// import fs from "fs";
 import path from "path";
-import mkdirp from "mkdirp";
+// import mkdirp from "mkdirp";
 import Promise from "bluebird";
 import * as helpers from "../helpers";
 import {
@@ -18,7 +18,7 @@ import {
   isUndefined,
   map,
   max,
-  template,
+  // template,
 } from "lodash";
 import inherits from "inherits";
 
@@ -180,12 +180,12 @@ export default class Migrator {
 
   // Ensures a folder for the migrations exist, dependent on the migration
   // config settings.
-  _ensureFolder() {
-    const dir = this._absoluteConfigDir();
-    return Promise.promisify(fs.stat, { context: fs })(dir).catch(() =>
-      Promise.promisify(mkdirp)(dir)
-    );
-  }
+  // _ensureFolder() {
+  //   const dir = this._absoluteConfigDir();
+  //   return Promise.promisify(fs.stat, { context: fs })(dir).catch(() =>
+  //     Promise.promisify(mkdirp)(dir)
+  //   );
+  // }
 
   // Ensures that a proper table has been created, dependent on the migration
   // config settings.
@@ -343,27 +343,27 @@ export default class Migrator {
 
   // Generates the stub template for the current migration, returning a compiled
   // template.
-  _generateStubTemplate() {
-    const stubPath =
-      this.config.stub ||
-      path.join(__dirname, "stub", this.config.extension + ".stub");
-    return Promise.promisify(fs.readFile, { context: fs })(stubPath).then(
-      (stub) => template(stub.toString(), { variable: "d" })
-    );
-  }
+  // _generateStubTemplate() {
+  //   const stubPath =
+  //     this.config.stub ||
+  //     path.join(__dirname, "stub", this.config.extension + ".stub");
+  //   return Promise.promisify(fs.readFile, { context: fs })(stubPath).then(
+  //     (stub) => template(stub.toString(), { variable: "d" })
+  //   );
+  // }
 
   // Write a new migration to disk, using the config and generated filename,
   // passing any `variables` given in the config to the template.
-  _writeNewMigration(name, tmpl) {
-    const { config } = this;
-    const dir = this._absoluteConfigDir();
-    if (name[0] === "-") name = name.slice(1);
-    const filename = yyyymmddhhmmss() + "_" + name + "." + config.extension;
-    return Promise.promisify(fs.writeFile, { context: fs })(
-      path.join(dir, filename),
-      tmpl(config.variables || {})
-    ).return(path.join(dir, filename));
-  }
+  // _writeNewMigration(name, tmpl) {
+  //   const { config } = this;
+  //   const dir = this._absoluteConfigDir();
+  //   if (name[0] === "-") name = name.slice(1);
+  //   const filename = yyyymmddhhmmss() + "_" + name + "." + config.extension;
+  //   return Promise.promisify(fs.writeFile, { context: fs })(
+  //     path.join(dir, filename),
+  //     tmpl(config.variables || {})
+  //   ).return(path.join(dir, filename));
+  // }
 
   // Get the last batch of migrations, by name, ordered by insert id in reverse
   // order.
